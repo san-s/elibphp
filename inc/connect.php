@@ -1,8 +1,12 @@
 <?php 
-    try {
-        $con = new pdo("mysql:host=127.0.0.1;dbname=web", "guysW", "guysWeb");
-    } catch (PDOException $e) {
-        print "Error!: " . $e->getMessage() . "<br/>";
-        die();
-    }
+$servername="localhost";
+$username="guysW";
+$password="guysWeb";
+$dbname="web";
+
+//Create Connection
+$conn=new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+} 
 ?>  
