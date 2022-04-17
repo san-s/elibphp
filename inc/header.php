@@ -1,5 +1,4 @@
-<?php include_once("function.php"); ?>
-<?php
+<?php include_once($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/function.php'); ?> <?php
 session_start();
 if (isset($_SESSION["success_message"])) {
     echo '<script type="text/javascript">toastr.success("' . $_SESSION["success_message"] . '")</script>';
@@ -36,13 +35,12 @@ if (isset($_SESSION["error_message"])) {
                 <button><i class="fas fa-search"></i></button>
             </form>
         </div>
-        <!-- <div id="header-cart"> -->
-            <!-- <a href="cart.php"><i class="fas fa-shopping-cart"><span>0</span></i></a> -->
-        <!-- </div> -->
 
         <?php if (isset($_SESSION['user'])) { ?>
             <form action="inc/controller/auth_controller.php" method="POST">
-                <button type="submit" name="logout"><p class="text-gray-500"><i class="fas fa-user mr-1"></i>Logout</p></button>
+                <button type="submit" name="logout">
+                    <p class="text-gray-500"><i class="fas fa-user mr-1"></i>Logout</p>
+                </button>
             </form>
         <?php } else { ?>
             <div id="header-login">

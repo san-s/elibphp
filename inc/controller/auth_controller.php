@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include("../connect.php");
+include_once($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/connect.php'); 
 
 
 if (isset($_POST['login'])) {
@@ -15,10 +15,8 @@ if (isset($_POST['login'])) {
     $pass = $_POST['password'];
     $email = $_POST['email'];
 
-    $check = $con->prepare("select * from users where email=:email limit 1");
-    $check->bindParam("email", $email);
-    $check->execute();
-    $user = $check->fetch();
+    $check = $con->query("select * from users where email='$email' limit 1");
+    $user = $check->fetch_assoc();
     $hashed_password = $user['password'];
 
     if ($hashed_password == null) {
@@ -31,7 +29,7 @@ if (isset($_POST['login'])) {
         $_SESSION["success_message"] = "Login success";
         $con = null;
         $_SESSION['user'] = $user['id'];
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/ELearning\/' . $_SESSION['redirect'] ?? 'index.php');
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web\/' . $_SESSION['redirect'] ?? 'index.php');
         return;
     } else {
         $_SESSION["failed_message"] = "Incorrect email or password";
@@ -57,10 +55,8 @@ if (isset($_POST['registration'])) {
     $email = $_POST['email'];
     $phone = $_POST['phone'];
 
-    $check = $con->prepare("select 1 as result from users where email=:email limit 1");
-    $check->bindParam("email", $email);
-    $check->execute();
-    $count = $check->fetch()['result'];
+    $check = $con->query("select 1 as result from users where email='$email' limit 1");
+    $count = $check->fetch_assoc()['result'];
 
     if ($count > 0) {
         $_SESSION["failed_message"] = "User already existed";
@@ -68,16 +64,12 @@ if (isset($_POST['registration'])) {
         return;
     }
 
-    $query = $con->prepare("insert into users (username, email, password, phone, role_id) values (:username, :email, :password, :phone, 1)");
-    $query->bindParam("username", $name);
-    $query->bindParam("email", $email);
-    $query->bindParam("phone", $phone);
     $hashed_password = password_hash($pass, PASSWORD_BCRYPT);
-    $query->bindParam("password", $hashed_password);
+    $query = "insert into users (username, email, password, phone, role_id) values ('$name', '$email', '$hashed_password', '$phone', 1)";
 
-    if ($query->execute()) {
+    if ($con->query($query)) {
         $_SESSION["success_message"] = "Registration successfully!";
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/ELearning/login.php');
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web');
     } else {
         $_SESSION["failed_message"] = "Registration failed";
         echo "<script>window.open('index.php?sub_cat', '_self')</script>";
@@ -90,5 +82,5 @@ if (isset($_POST['logout'])) {
     session_start();
     $_SESSION = array();
     $_SESSION["success_message"] = "Logout successfully!";
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . '/ELearning/index.php');
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/index.php');
 }

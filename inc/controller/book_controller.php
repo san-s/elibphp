@@ -1,6 +1,10 @@
 <?php
 
 if (isset($_POST['add_book'])) {
+    if (!isset($_SESSION['user'])) return;
+
+    $user_id = $_SESSION['user'];
+
     if (isset($_POST['book_name'])) {
         $booknameVar = $_POST['book_name'];
     }
@@ -27,13 +31,9 @@ if (isset($_POST['add_book'])) {
         }
     }
 
-    if (isset($_POST['uploadername'])) {
-        $uploadernameVar = $_POST['uploadername'];
-    }
-
     //Insert Values
     $sql = "INSERT INTO books (book_name, book_desc, book_author, book_file, uploader_id) 
-    VALUES ('$booknameVar', '$bookdescVar', '$bookauthorVar', '$bookfileVar', '$uploadernameVar')";
+    VALUES ('$booknameVar', '$bookdescVar', '$bookauthorVar', '$bookfileVar', '$user_id')";
 
     //To check whether data is inserted properly or not
     if ($conn->query($sql) === TRUE) {
