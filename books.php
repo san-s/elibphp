@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php session_start();
+<?php if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (
     !isset($_SESSION['user'])
 ) {
@@ -28,191 +30,62 @@ if (
         include("inc/header.php"); ?>
 
         <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
-        <?php
-        $courses = get_books(); ?>
-        <section class="px-0 md:px-6 py-6">
-            <div class="md:rounded border-gray-100 dark:bg-gray-900/70 bg-white border dark:border-gray-800 mb-6">
-                <header class="border-gray-100 flex items-stretch border-b dark:border-gray-800">
-                    <div class="flex items-center py-3 flex-grow font-bold px-4">
-                        <details class="w-full">
-                            <summary>Manage book</summary>
 
-                            <div>
-                                <div class="border-b border-gray-200 dark:border-gray-700">
-                                    <ul class="flex flex-wrap -mb-px nav nav-tabs">
-                                        <li class="mr-2 nav-item">
-                                            <a href="#add" data-toggle="tab" class="nav-link inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 active">Add</a>
-                                        </li>
-                                        <li class="mr-2 nav-item">
-                                            <a href="#update" data-toggle="tab" class="nav-link inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300">Update</a>
-                                        </li>
-                                        <li class="mr-2 nav-item">
-                                            <a href="#delete" data-toggle="tab" class="nav-link inline-block py-4 px-4 text-sm font-medium text-center text-gray-500 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300">Delete</a>
-                                        </li>
-                                    </ul>
+        <div id="wrapper">
+
+            <div class="mt-8 w-9/12 mx-auto">
+
+                <section class="mt-4">
+                    <nav class="flex px-5 text-gray-700 rounded-lg shadow-sm border-gray-200 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+                        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                            <li class="inline-flex items-center">
+                                <a href="index.php" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                                    Home
+                                </a>
+                            </li>
+                            <li aria-current="page">
+                                <div class="flex items-center">
+                                    <span class="material-icons text-base outlined mx-2">chevron_right</span>
+                                    <span class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500">Top courses</span>
                                 </div>
+                            </li>
+                        </ol>
+                        <form id="form-search" action="#" class="ml-auto w-5/12" method="post">
+                            <input id="search" name="keyword" placeholder="Search for books" class="string form-input-control ml-auto required block px-4 py-2 rounded-md font-medium bg-gray-100 border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:shadow-md focus:border-gray-400 focus:bg-white my-2" type="text" />
+                        </form>
+                    </nav>
 
-                                <div class="tab-content">
-                                    <div class="tab-pane active" id="add">
-                                        <div class="mt-4">
-                                            <h3 class="text-black text-2xl font-bold">Add book</h3>
-                                            <div class="mt-4">
-                                                <form method="post" enctype="multipart/form-data" action="inc/controller/account_controller.php">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4" for="inline-full-name">
-                                                        Book name
-                                                    </label>
-                                                    <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter username">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Description
-                                                    </label>
-                                                    <input type="text" name="book_desc" id="book_desc" class="form-input-control mt-1" placeholder="Enter description">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Author
-                                                    </label>
-                                                    <input type="tel" name="book_author" id="book_author" class="form-input-control mt-1" placeholder="Enter author">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Language
-                                                    </label>
-                                                    <input type="tel" name="book_lang" id="book_lang" class="form-input-control mt-1" placeholder="Enter lang">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Book file
-                                                    </label>
-                                                    <span class="text-xs text-gray-500 italic">Leave blank if you don't want to change</span>
-                                                    <input type="file" name="book_file" id="book_file" class="form-input-control mt-1">
-                                                    <button type="submit" name="update_account" class="px-4 py-2 mt-4 rounded-full bg-indigo-600 font-bold text-sm text-white">
-                                                        Add book
-                                                    </button>
-                                                </form>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane" id="update">
-                                        <div class="mt-4">
-                                            <h3 class="text-black text-2xl font-bold">Update book</h3>
-                                            <div class="mt-4">
-                                                <form method="post" enctype="multipart/form-data" action="inc/controller/account_controller.php">
-
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4" for="inline-full-name">
-                                                        Book name
-                                                    </label>
-                                                    <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter username">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Description
-                                                    </label>
-                                                    <input type="text" name="book_desc" id="book_desc" class="form-input-control mt-1" placeholder="Enter description">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Author
-                                                    </label>
-                                                    <input type="tel" name="book_author" id="book_author" class="form-input-control mt-1" placeholder="Enter author">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Language
-                                                    </label>
-                                                    <input type="tel" name="book_lang" id="book_lang" class="form-input-control mt-1" placeholder="Enter lang">
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
-                                                        Book file
-                                                    </label>
-                                                    <span class="text-xs text-gray-500 italic">Leave blank if you don't want to change</span>
-                                                    <input type="file" name="book_file" id="book_file" class="form-input-control mt-1">
-                                                    <button type="submit" name="update_account" class="px-4 py-2 mt-4 rounded-full bg-indigo-600 font-bold text-sm text-white">
-                                                        Update book
-                                                    </button>
-                                                </form>
-                                            </div>
+                </section>
 
 
-                                        </div>
-                                    </div>
+                <div class="grid grid-col-4 grid-gap-2 justify-center my-8">
 
-                                    <div class="tab-pane" id="delete">
-                                    </div>
+                    <?php
+
+                    $books = get_books();
+
+                    foreach ($books as $book) { ?>
+                        <div class="w-56">
+                            <a href="topic.php?topic_id=<?php echo $book["topic_id"] ?>">
+                                <img class="h-64 object-cover w-full" src="uploads/books/covers/<?php echo $book["book_cover"] ?>" alt="">
+                                <p class="text-base text-indigo-600 mt-1"><?php echo $book["book_name"] ?></p>
+                                <h4 class="text-sm text-gray-500"><?php echo $book["book_desc"] ?></h4>
+                                <div class="flex justify-between">
+                                    <h5 class="text-sm text-gray-400 mt-2">Author: <?php echo $book["book_author"] ?></h5>
+                                    <h5 class="text-sm text-gray-400 mt-2"><?php echo $book["username"] ?></h5>
                                 </div>
-
-                            </div>
-
-
-
-
-
-                        </details>
-                    </div>
-                </header>
-
-
-
-                <div class="flex flex-col flex-grow mt-4">
-                    <div class="flex items-center justify-between px-4">
-                        <p class="text-2xl font-bold">Manage courses</p>
-                    </div>
-                    <div class="my-2">
-                        <div class="py-2 align-middle px-4">
-                            <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                                <table class="divide-y divide-gray-200 min-w-full">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider text-right">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-
-                                        <?php
-                                        $i = 1;
-                                        $courses = get_books();
-
-                                        foreach ($courses as $course) {
-                                        ?>
-
-                                            <tr>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="flex items-center">
-                                                        <div class="text-sm font-medium text-gray-900"> <?php echo $course['course_name'] ?> </div>
-                                                    </div>
-                                                </td>
-
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <div class="flex items-center">
-                                                        <div class="text-sm font-medium text-gray-900"> <?php echo $course['course_description'] ?> </div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"> Active </span>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Admin</td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end">
-                                                    <a href="index.php?edit_course=<?php echo $course['id'] ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                                    <form action="inc/controller/course_controller.php" method="POST">
-                                                        <input type="hidden" name="course_id" value="<?php echo $course['id'] ?>">
-                                                        <button name="del_course_id" class="text-red-600 hover:text-red-900 ml-2">Delete</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-
-                                        <?php }
-
-                                        ?>
-
-                                        <!-- More people... -->
-                                    </tbody>
-                                </table>
-                            </div>
+                            </a>
                         </div>
-                    </div>
-                </div>
+                    <?php } ?>
 
+                </div>
             </div>
 
-
-        </section>
-
-        <div class="flex items-center flex-col justify-center overflow-hidden fixed inset-0 z-30" style="display: none;">
-            <div class="absolute inset-0 bg-gradient-to-tr opacity-90 dark:from-gray-700 dark:via-gray-900 dark:to-gray-700 from-white via-gray-100 to-white"></div>
+            <div class="flex items-center flex-col justify-center overflow-hidden fixed inset-0 z-30" style="display: none;">
+                <div class="absolute inset-0 bg-gradient-to-tr opacity-90 dark:from-gray-700 dark:via-gray-900 dark:to-gray-700 from-white via-gray-100 to-white"></div>
+            </div>
         </div>
     </div>
-
 </body>
 
 </html>

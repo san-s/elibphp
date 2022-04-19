@@ -1,5 +1,7 @@
 <?php include_once($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/function.php'); ?> <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (isset($_SESSION["success_message"])) {
     echo '<script type="text/javascript">toastr.success("' . $_SESSION["success_message"] . '")</script>';
     unset($_SESSION["success_message"]);
@@ -23,7 +25,7 @@ if (isset($_SESSION["error_message"])) {
     </div>
     <div id="down-header">
         <div id="title">
-            <h2><a href="index.php">E Learning</a></h2>
+            <h2><a href="index.php">E Library</a></h2>
         </div>
         <div id="menu">
             <h2><i class="fas fa-bars"></i></h2>
