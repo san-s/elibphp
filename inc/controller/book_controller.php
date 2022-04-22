@@ -74,3 +74,8 @@ if (isset($_POST['add_book'])) {
 
     $con->close();
 }
+
+
+if (isset($_GET["q"])) {
+    search_advance($_GET["q"]);
+}

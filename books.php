@@ -8,10 +8,13 @@ if (
 ) {
     $_SESSION['redirect'] = 'admin/index.php';
     header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web');
-} ?>
+}
+
+?>
+
 <?php include("inc/head.php") ?>
 
-<body class="bg-white text-base dark:bg-gray-800 dark:text-gray-100 pt-20">
+<body class="bg-white text-base dark:bg-gray-800 dark:text-gray-100">
     <div id="app" data-v-app="">
 
         <?php
@@ -46,11 +49,11 @@ if (
                             <li aria-current="page">
                                 <div class="flex items-center">
                                     <span class="material-icons text-base outlined mx-2">chevron_right</span>
-                                    <span class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500">Top courses</span>
+                                    <span class="ml-1 text-sm font-medium text-gray-400 md:ml-2 dark:text-gray-500">Top books</span>
                                 </div>
                             </li>
                         </ol>
-                        <form id="form-search" action="#" class="ml-auto w-5/12" method="post">
+                        <form id="form-search" class="ml-auto w-5/12" method="post">
                             <input id="search" name="keyword" placeholder="Search for books" class="string form-input-control ml-auto required block px-4 py-2 rounded-md font-medium bg-gray-100 border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:shadow-md focus:border-gray-400 focus:bg-white my-2" type="text" />
                         </form>
                     </nav>
@@ -58,7 +61,7 @@ if (
                 </section>
 
 
-                <div class="grid grid-col-4 grid-gap-2 justify-center my-8">
+                <div id="books-container" class="grid grid-col-4 grid-gap-2 my-8">
 
                     <?php
 
@@ -87,5 +90,22 @@ if (
         </div>
     </div>
 </body>
+
+<script>
+    document.getElementById("form-search").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const keyword = document.getElementById("search").value;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                document.getElementById("books-container").innerHTML = this.responseText;
+            }
+        };
+        xmlhttp.open("GET", "inc/controller/book_controller.php?q=" + keyword, true);
+        xmlhttp.send();
+    })
+</script>
 
 </html>

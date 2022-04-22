@@ -33,7 +33,7 @@ if (isset($_SESSION["error_message"])) {
         </div>
         <div id="header-search">
             <form action="search.php">
-                <input type="search" name="query" placeholder="Search courses">
+                <input type="search" name="query" placeholder="Search books">
                 <button><i class="fas fa-search"></i></button>
             </form>
         </div>
