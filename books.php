@@ -65,9 +65,9 @@ if (
 
                     <?php
 
-                    $books = get_books();
+                    extract(get_books());
 
-                    foreach ($books as $book) { ?>
+                    foreach ($result as $book) { ?>
                         <div class="w-56">
                             <a href="topic.php?topic_id=<?php echo $book["topic_id"] ?>">
                                 <img class="h-64 object-cover w-full" src="uploads/books/covers/<?php echo $book["book_cover"] ?>" alt="">
@@ -79,8 +79,15 @@ if (
                                 </div>
                             </a>
                         </div>
-                    <?php } ?>
+                    <?php }
+                    ?>
 
+                </div>
+
+                <div id="books-paging" class="my-16 flex justify-end">
+                    <?php
+                    page_nav_links($paging, $_GET["search_kw"]);
+                    ?>
                 </div>
             </div>
 
@@ -99,8 +106,8 @@ if (
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-                document.getElementById("books-container").innerHTML = this.responseText;
+                document.getElementById("books-container").innerHTML = JSON.parse(this.responseText)['books_html'].join(" ");
+                document.getElementById("books-paging").innerHTML = JSON.parse(this.responseText)['paging_html'].join(" ");
             }
         };
         xmlhttp.open("GET", "inc/controller/book_controller.php?q=" + keyword, true);

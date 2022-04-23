@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-include_once($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/connect.php'); 
+include_once($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/connect.php');
 
 
 if (isset($_POST['login'])) {
@@ -26,6 +26,29 @@ if (isset($_POST['login'])) {
     }
 
     if (password_verify($pass, $hashed_password)) {
+        
+        // Remember me
+        if ($_POST["remember_me"]) {
+            $selector = base64_encode(random_bytes(9));
+            $authenticator = random_bytes(33);
+
+            setcookie(
+                'remember',
+                $selector . ':' . base64_encode($authenticator),
+                time() + 864000,
+                '/',
+                'localhost.com',
+                true, // TLS-only
+                true  // http-only
+            );
+
+            $hash = hash('sha256', $authenticator);
+            $expire = date('Y-m-d\TH:i:s', time() + 864000);
+
+            $con->query("INSERT INTO auth_tokens (selector, validator, userid, expires) VALUES ('$selector', '$hash', $user[id], '$expire')");
+        }
+
+
         $_SESSION["success_message"] = "Login success";
         $con = null;
         $_SESSION['user'] = $user['id'];
@@ -45,7 +68,7 @@ if (isset($_POST['registration'])) {
     if (
         !isset($_POST['username']) ||
         !isset($_POST['email']) ||
-        !isset($_POST['password']) 
+        !isset($_POST['password'])
     ) {
         return;
     }

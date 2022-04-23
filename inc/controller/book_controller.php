@@ -77,5 +77,5 @@ if (isset($_POST['add_book'])) {
 
 
 if (isset($_GET["q"])) {
-    search_advance($_GET["q"]);
+    search_ajax($_GET["q"]);
 }
