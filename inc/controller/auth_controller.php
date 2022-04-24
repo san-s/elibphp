@@ -3,7 +3,6 @@
 session_start();
 include_once($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/connect.php');
 
-
 if (isset($_POST['login'])) {
     if (
         !isset($_POST['email']) ||
@@ -26,7 +25,7 @@ if (isset($_POST['login'])) {
     }
 
     if (password_verify($pass, $hashed_password)) {
-        
+
         // Remember me
         if ($_POST["remember_me"]) {
             $selector = base64_encode(random_bytes(9));
@@ -106,4 +105,74 @@ if (isset($_POST['logout'])) {
     $_SESSION = array();
     $_SESSION["success_message"] = "Logout successfully!";
     header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/index.php');
+}
+
+if (isset($_POST['login_ajax'])) {
+    if (
+        !isset($_POST['email']) ||
+        !isset($_POST['password'])
+    ) {
+        return;
+    }
+
+    $pass = $_POST['password'];
+    $email = $_POST['email'];
+
+    $check = $con->query("select * from users where email='$email' limit 1");
+    $user = $check->fetch_assoc();
+    $hashed_password = $user['password'];
+
+    if ($hashed_password == null) {
+        $_SESSION["failed_message"] = "Incorrect email or password";
+        $con = null;
+        return;
+    }
+
+    if (password_verify($pass, $hashed_password)) {
+
+        // Remember me
+        if (isset($_POST["remember_me"]) && $_POST["remember_me"]) {
+            $selector = base64_encode(random_bytes(9));
+            $authenticator = random_bytes(33);
+
+            setcookie(
+                'remember',
+                $selector . ':' . base64_encode($authenticator),
+                time() + 864000,
+                '/',
+                'localhost.com',
+                true, // TLS-only
+                true  // http-only
+            );
+
+            $hash = hash('sha256', $authenticator);
+            $expire = date('Y-m-d\TH:i:s', time() + 864000);
+
+            $con->query("INSERT INTO auth_tokens (selector, validator, userid, expires) VALUES ('$selector', '$hash', $user[id], '$expire')");
+        }
+
+
+        $con = null;
+        $_SESSION['user'] = $user['id'];
+        header('Content-Type: application/json');
+        echo json_encode(array("success" => true, "message" => "Login success"));
+        exit;
+    } else {
+        $con = null;
+        header('Content-Type: application/json');
+        echo json_encode(array("success" => false, "message" => "Incorrect email or password"));
+        exit;
+    }
+
+    $con = null;
+}
+
+if (isset($_POST['logout_ajax'])) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    $_SESSION = array();
+    header('Content-Type: application/json');
+    echo json_encode(array("success" => true, "message" => "Logout successfully!"));
+    exit;
 }
