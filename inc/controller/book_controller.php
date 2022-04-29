@@ -79,3 +79,21 @@ if (isset($_POST['add_book'])) {
 if (isset($_GET["q"])) {
     search_ajax($_GET["q"]);
 }
+
+if (isset($_GET["download_book"])) {
+    $name = $_GET['download_book'];
+    $file_path = $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/' . $name;
+
+    header('Content-Description: File Transfer');
+    header('Content-Type: application/force-download');
+    header("Content-Disposition: attachment; filename=\"" . basename($name) . "\";");
+    header('Content-Transfer-Encoding: binary');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize($file_path));
+    ob_clean();
+    flush();
+    readfile($file_path); //showing the path to the server where the file is to be download
+    exit;
+}

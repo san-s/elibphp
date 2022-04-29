@@ -17,9 +17,21 @@ function get_books()
 
     $paging = calculate_paging($num);
     //fetch from database
-    $sql = "SELECT * from books b inner join users u on b.uploader_id=u.id LIMIT $paging[p_start], $record_ppage";
+    $sql = "SELECT b.*, u.username, u.email from books b inner join users u on b.uploader_id=u.id LIMIT $paging[p_start], $record_ppage";
     $result = $con->query($sql);
     return array("result" => $result, "paging" => $paging);
+}
+
+function get_book($id)
+{
+    include("inc/connect.php");
+
+    $query = "SELECT b.*, u.username, u.email FROM books b inner join users u on b.uploader_id=u.id where b.id='$id'";
+
+    $result = $con->query($query);
+    $row = $result->fetch_assoc();
+   
+    return $row;
 }
 
 
@@ -100,12 +112,12 @@ _RES;
     $paging_html = [];
     if ($paging['p_prev'] > 0) { //previous
         $paging_html[] = <<<_RES
-        <a href='books.php?search_kw=$keyword&page=$paging[p_prev]'>Next</a>&nbsp&nbsp&nbsp
+        <a href='index.php?search_kw=$keyword&page=$paging[p_prev]'>Next</a>&nbsp&nbsp&nbsp
 _RES;
     }
     if ($paging['p_next'] > 0) { //next
         $paging_html[] = <<<_RES
-        <a href='books.php?search_kw=$keyword&page=$paging[p_next]'>Next</a>
+        <a href='index.php?search_kw=$keyword&page=$paging[p_next]'>Next</a>
 _RES;
     }
 
@@ -206,19 +218,19 @@ function page_nav_links($paging, $search_kw)
 
     if (is_null($search_kw)) {
         if ($paging['p_prev'] > 0) { //previous
-            echo "<a href='books.php?page=" . $paging['p_prev'] . "'>Previous</a>&nbsp&nbsp&nbsp";
+            echo "<a href='index.php?page=" . $paging['p_prev'] . "'>Previous</a>&nbsp&nbsp&nbsp";
         }
         if ($paging['p_next'] > 0) { //next
-            echo "<a href='books.php?page=" . $paging['p_next'] . "'>Next</a>";
+            echo "<a href='index.php?page=" . $paging['p_next'] . "'>Next</a>";
         }
     } else {
 
         if ($paging['p_prev'] > 0) { //previous
-            echo "<a href='books.php?search_kw=$search_kw" .
+            echo "<a href='index.php?search_kw=$search_kw" .
                 "&page=" . $paging['p_prev'] . "'>Previous</a>&nbsp&nbsp&nbsp";
         }
         if ($paging['p_next'] > 0) { //next
-            echo "<a href='books.php?search_kw=$search_kw " .
+            echo "<a href='index.php?search_kw=$search_kw " .
                 "&page=" . $paging['p_next'] . "'>Next</a>";
         }
     }

@@ -32,8 +32,8 @@
             <?php include("inc/cat_main.php") ?>
         </div>
         <div id="header-search">
-            <form action="search.php">
-                <input type="search" name="query" placeholder="Search books">
+            <form action="index.php">
+                <input type="search" name="search_kw" placeholder="Search books">
                 <button><i class="fas fa-search"></i></button>
             </form>
         </div>
