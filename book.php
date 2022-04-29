@@ -1,5 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+<?php
+include_once($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/function.php');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (
+    !isAuth()
+) {
+    // header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web');
+} ?>
 
 <?php include("inc/head.php") ?>
 

@@ -114,6 +114,7 @@
             var xmlhttp = new XMLHttpRequest();
             xmlhttp.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
                     const result = JSON.parse(this.responseText);
                     if (result.success) {
                         document.getElementById("header-login").classList.add("hidden");

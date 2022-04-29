@@ -36,9 +36,6 @@ if (isset($_POST['login'])) {
                 $selector . ':' . base64_encode($authenticator),
                 time() + 864000,
                 '/',
-                'localhost.com',
-                true, // TLS-only
-                true  // http-only
             );
 
             $hash = hash('sha256', $authenticator);
@@ -120,6 +117,12 @@ if (isset($_POST['login_ajax'])) {
 
     $check = $con->query("select * from users where email='$email' limit 1");
     $user = $check->fetch_assoc();
+    if ($user == null) {
+        $con = null;
+        header('Content-Type: application/json');
+        echo json_encode(array("success" => false, "message" => "Incorrect email or password"));
+        exit;
+    }
     $hashed_password = $user['password'];
 
     if ($hashed_password == null) {
@@ -139,10 +142,7 @@ if (isset($_POST['login_ajax'])) {
                 'remember',
                 $selector . ':' . base64_encode($authenticator),
                 time() + 864000,
-                '/',
-                'localhost.com',
-                true, // TLS-only
-                true  // http-only
+                "/"
             );
 
             $hash = hash('sha256', $authenticator);

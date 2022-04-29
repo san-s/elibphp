@@ -30,7 +30,7 @@ function get_book($id)
 
     $result = $con->query($query);
     $row = $result->fetch_assoc();
-   
+
     return $row;
 }
 
@@ -41,7 +41,8 @@ function unique_file_name($ext)
     return $file_name;
 }
 
-function search_advance($keyword) {
+function search_advance($keyword)
+{
     include('connect.php');
     global $record_ppage;
     $keyword = trim($keyword);
@@ -76,7 +77,7 @@ function search_advance($keyword) {
     $num = $row[0];
     $paging = calculate_paging($num);
 
-    $query = "select * from books b inner join users u on b.uploader_id=u.id where book_name like '%$pro_kw%' limit $paging[p_start], $record_ppage";
+    $query = "select b.*, u.username, u.email from books b inner join users u on b.uploader_id=u.id where book_name like '%$pro_kw%' limit $paging[p_start], $record_ppage";
 
     $result = $con->query($query) or die("Query failed: " . $conn->error);
 
@@ -85,7 +86,7 @@ function search_advance($keyword) {
 
 function search_ajax($keyword)
 {
- 
+
     extract(search_advance($keyword));
     $books_html = [];
 
@@ -235,3 +236,50 @@ function page_nav_links($paging, $search_kw)
         }
     }
 } //page_nav_links()
+
+function isAuth()
+{
+
+    include('connect.php');
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    // if (isset($_SESSION['user'])) return true;
+
+    if (
+        !isset($_SESSION['user']) && !isset($_COOKIE["remember"])
+    ) {
+        return false;
+    }
+
+    list($selector, $authenticator) = explode(':', $_COOKIE['remember']);
+    
+
+    $row = $con->query(
+        "SELECT * FROM auth_tokens WHERE selector = '$selector'"
+    )->fetch_assoc();
+    
+    if (hash_equals($row['validator'], hash('sha256', base64_decode($authenticator)))) {
+        $userid = $row['userid'];
+        $_SESSION['user'] = $row['userid'];
+        
+        $selector = base64_encode(random_bytes(9));
+        $authenticator = random_bytes(33);
+        
+        setcookie(
+                'remember',
+                $selector . ':' . base64_encode($authenticator),
+                time() + 864000,
+            '/',
+        );
+        
+        $hash = hash('sha256', $authenticator);
+
+        $con->query("UPDATE auth_tokens SET selector='$selector', validator='$hash' where userid='$userid'");
+
+
+        // Then regenerate login token as above
+        return true;
+    }
+}
