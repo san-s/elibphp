@@ -1,4 +1,3 @@
 <ul>
-    <li><a href=""><i class="fa fa-code"></i>Development</a></li>
-    <li><a href=""><i class="fa fa-crop"></i>Design</a></li>
+    <li><a href="manage_books.php"><i class="fa fa-code"></i>Manage books</a></li>
 </ul>

@@ -1,5 +1,20 @@
 <?php
 $record_ppage = 3;
+
+function display_books()
+{
+    include("inc/connect.php");
+
+    $rows = [];
+    //fetch from database
+    $sql = "SELECT b.*, u.username, u.email from books b inner join users u on b.uploader_id=u.id";
+    $result = $con->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    return $rows;
+}
+
 function get_books()
 {
     global $record_ppage;
@@ -245,7 +260,7 @@ function isAuth()
         session_start();
     }
 
-    // if (isset($_SESSION['user'])) return true;
+    if (isset($_SESSION['user'])) return true;
 
     if (
         !isset($_SESSION['user']) && !isset($_COOKIE["remember"])
@@ -254,26 +269,26 @@ function isAuth()
     }
 
     list($selector, $authenticator) = explode(':', $_COOKIE['remember']);
-    
+
 
     $row = $con->query(
         "SELECT * FROM auth_tokens WHERE selector = '$selector'"
     )->fetch_assoc();
-    
+
     if (hash_equals($row['validator'], hash('sha256', base64_decode($authenticator)))) {
         $userid = $row['userid'];
         $_SESSION['user'] = $row['userid'];
-        
+
         $selector = base64_encode(random_bytes(9));
         $authenticator = random_bytes(33);
-        
+
         setcookie(
-                'remember',
-                $selector . ':' . base64_encode($authenticator),
-                time() + 864000,
+            'remember',
+            $selector . ':' . base64_encode($authenticator),
+            time() + 864000,
             '/',
         );
-        
+
         $hash = hash('sha256', $authenticator);
 
         $con->query("UPDATE auth_tokens SET selector='$selector', validator='$hash' where userid='$userid'");

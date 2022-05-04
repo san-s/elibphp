@@ -8,6 +8,9 @@ if (isset($_POST['login'])) {
         !isset($_POST['email']) ||
         !isset($_POST['password'])
     ) {
+        $_SESSION["error_message"] = "Incorrect email or password";
+        $con = null;
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/login.php');
         return;
     }
 
@@ -16,10 +19,16 @@ if (isset($_POST['login'])) {
 
     $check = $con->query("select * from users where email='$email' limit 1");
     $user = $check->fetch_assoc();
+    if ($user == null) {
+        $_SESSION["error_message"] = "Incorrect email or password";
+        $con = null;
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/login.php');
+        return;
+    }
     $hashed_password = $user['password'];
 
     if ($hashed_password == null) {
-        $_SESSION["failed_message"] = "Incorrect email or password";
+        $_SESSION["error_message"] = "Incorrect email or password";
         $con = null;
         return;
     }
@@ -48,11 +57,12 @@ if (isset($_POST['login'])) {
         $_SESSION["success_message"] = "Login success";
         $con = null;
         $_SESSION['user'] = $user['id'];
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web\/' . $_SESSION['redirect'] ?? 'index.php');
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/' . $_SESSION['redirect'] ?? 'index.php');
         return;
     } else {
-        $_SESSION["failed_message"] = "Incorrect email or password";
+        $_SESSION["error_message"] = "Incorrect email or password";
         $con = null;
+        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/login.php');
         return;
     }
 
@@ -78,7 +88,7 @@ if (isset($_POST['registration'])) {
     $count = $check->fetch_assoc()['result'];
 
     if ($count > 0) {
-        $_SESSION["failed_message"] = "User already existed";
+        $_SESSION["error_message"] = "User already existed";
         $con = null;
         return;
     }
@@ -90,7 +100,7 @@ if (isset($_POST['registration'])) {
         $_SESSION["success_message"] = "Registration successfully!";
         header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web');
     } else {
-        $_SESSION["failed_message"] = "Registration failed";
+        $_SESSION["error_message"] = "Registration failed";
         echo "<script>window.open('index.php?sub_cat', '_self')</script>";
     }
     $con = null;
@@ -126,7 +136,7 @@ if (isset($_POST['login_ajax'])) {
     $hashed_password = $user['password'];
 
     if ($hashed_password == null) {
-        $_SESSION["failed_message"] = "Incorrect email or password";
+        $_SESSION["error_message"] = "Incorrect email or password";
         $con = null;
         return;
     }

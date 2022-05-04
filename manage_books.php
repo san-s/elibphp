@@ -6,12 +6,12 @@
 if (
     !isset($_SESSION['user'])
 ) {
-    $_SESSION['redirect'] = 'admin/index.php';
-    header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web');
+    $_SESSION['redirect'] = 'index.php';
+    header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/login.php');
 } ?>
 <?php include("inc/head.php") ?>
 
-<body class="bg-white text-base dark:bg-gray-800 dark:text-gray-100 pt-20">
+<body class="bg-white text-base dark:bg-gray-800 dark:text-gray-100">
     <div id="app" data-v-app="">
 
         <?php
@@ -168,7 +168,7 @@ if (
 
                                         <?php
                                         $i = 1;
-                                        $books = get_books();
+                                        $books = display_books();
 
                                         foreach ($books as $book) {
                                         ?>
