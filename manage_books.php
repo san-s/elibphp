@@ -31,7 +31,7 @@ if (
 
         <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet" />
         <?php
-        $courses = get_books(); ?>
+        $books = display_books(); ?>
         <section class="px-0 md:px-6 py-6">
             <div class="md:rounded border-gray-100 dark:bg-gray-900/70 bg-white border dark:border-gray-800 mb-6">
                 <header class="border-gray-100 flex items-stretch border-b dark:border-gray-800">
@@ -99,8 +99,22 @@ if (
                                             <h3 class="text-black text-2xl font-bold">Update book</h3>
                                             <div class="mt-4">
                                                 <form method="post" enctype="multipart/form-data" action="inc/controller/book_controller.php">
+                                                    <div class="form-group">
 
-                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4" for="inline-full-name">
+                                                        <label class="mt-2 text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 w-1/6 flex-shrink-0" for="exampleFormControlSelect1">
+                                                            Select book
+                                                        </label>
+                                                        <select class="form-input-control mt-1" name="book_id">
+
+                                                            <?php foreach ($books as $book) {
+                                                            ?>
+                                                                <option value="<?php echo $book['id'] ?>"><?php echo  $book['book_name']; ?></option>
+                                                            <?php } ?>
+
+                                                        </select>
+                                                    </div>
+
+                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 mt-1 md:mb-0 pr-4" for="inline-full-name">
                                                         Book name
                                                     </label>
                                                     <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter username">
@@ -119,9 +133,14 @@ if (
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Book file
                                                     </label>
-                                                    <span class="text-xs text-gray-500 italic">Leave blank if you don't want to change</span>
-                                                    <input type="file" name="book_file" id="book_file" class="form-input-control mt-1">
-                                                    <button type="submit" name="update_account" class="px-4 py-2 mt-4 rounded-full bg-indigo-600 font-bold text-sm text-white">
+                                                    <span class="text-xs text-gray-500 italic">Cannot be blank</span>
+                                                    <input type="file" name="book_file" id="book_file" class="form-input-control mt-1" placeholder="Enter lang">
+                                                    <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
+                                                        Book cover
+                                                    </label>
+                                                    <span class="text-xs text-gray-500 italic">Leave blank if you don't have cover</span>
+                                                    <input type="file" name="book_cover" id="book_cover" class="form-input-control mt-1">
+                                                    <button type="submit" name="update_book" class="px-4 py-2 mt-4 rounded-full bg-indigo-600 font-bold text-sm text-white">
                                                         Update book
                                                     </button>
                                                 </form>
@@ -132,6 +151,29 @@ if (
                                     </div>
 
                                     <div class="tab-pane" id="delete">
+                                        <div class="mt-4">
+                                            <h3 class="text-black text-2xl font-bold">Delete book</h3>
+                                            <div class="mt-4">
+
+                                                <form action="inc/controller/book_controller.php" method="post" enctype="multipart/form-data">
+                                                    <div class="form-group">
+                                                        <label class="mt-2 text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 w-1/6 flex-shrink-0" for="exampleFormControlSelect1">
+                                                            Select book
+                                                        </label>
+                                                        <select class="form-input-control mt-1" name="book_id">
+                                                            <?php foreach ($books as $book) {
+                                                            ?>
+                                                                <option value="<?php echo $book['id'] ?>"><?php echo  $book['book_name']; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="text-right">
+                                                        <button name="del_book" class="px-4 py-2 mt-4 rounded-full bg-indigo-600 font-bold text-sm text-white w-1/4">Delete book</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -168,7 +210,6 @@ if (
 
                                         <?php
                                         $i = 1;
-                                        $books = display_books();
 
                                         foreach ($books as $book) {
                                         ?>
@@ -188,10 +229,9 @@ if (
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $book["book_author"] ?></td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><?php echo $book["username"] ?></td>
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end">
-                                                    <a href="index.php?edit_book=<?php echo $book['id'] ?>" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                                     <form action="inc/controller/book_controller.php" method="POST">
                                                         <input type="hidden" name="book_id" value="<?php echo $book['id'] ?>">
-                                                        <button name="del_book_id" class="text-red-600 hover:text-red-900 ml-2">Delete</button>
+                                                        <button name="del_book" class="text-red-600 hover:text-red-900 ml-2">Delete</button>
                                                     </form>
                                                 </td>
                                             </tr>

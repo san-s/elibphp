@@ -39,7 +39,8 @@ function get_books()
 
 function get_book($id)
 {
-    include("inc/connect.php");
+
+    include($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/connect.php');
 
     $query = "SELECT b.*, u.username, u.email FROM books b inner join users u on b.uploader_id=u.id where b.id='$id'";
 
