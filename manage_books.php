@@ -59,27 +59,31 @@ if (
                                         <div class="mt-4">
                                             <h3 class="text-black text-2xl font-bold">Add book</h3>
                                             <div class="mt-4">
-                                                <form method="post" enctype="multipart/form-data" action="inc/controller/book_controller.php">
+                                                <form id="form-add-book" method="post" enctype="multipart/form-data" action="inc/controller/book_controller.php">
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4" for="inline-full-name">
                                                         Book name
                                                     </label>
                                                     <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter username">
+                                                    <span id="book-name-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Description
                                                     </label>
+                                                    <span id="book-desc-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <input type="text" name="book_desc" id="book_desc" class="form-input-control mt-1" placeholder="Enter description">
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Author
                                                     </label>
+                                                    <span id="book-author-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <input type="tel" name="book_author" id="book_author" class="form-input-control mt-1" placeholder="Enter author">
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Language
                                                     </label>
+                                                    <span id="book-lang-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <input type="tel" name="book_lang" id="book_lang" class="form-input-control mt-1" placeholder="Enter lang">
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Book file
                                                     </label>
-                                                    <span class="text-xs text-gray-500 italic">Cannot be blank</span>
+                                                    <span id="book-file-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <input type="file" name="book_file" id="book_file" class="form-input-control mt-1" placeholder="Enter lang">
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Book cover
@@ -98,7 +102,7 @@ if (
                                         <div class="mt-4">
                                             <h3 class="text-black text-2xl font-bold">Update book</h3>
                                             <div class="mt-4">
-                                                <form method="post" enctype="multipart/form-data" action="inc/controller/book_controller.php">
+                                                <form id="form-update-book" method="post" enctype="multipart/form-data" action="inc/controller/book_controller.php">
                                                     <div class="form-group">
 
                                                         <label class="mt-2 text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 w-1/6 flex-shrink-0" for="exampleFormControlSelect1">
@@ -118,6 +122,7 @@ if (
                                                         Book name
                                                     </label>
                                                     <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter username">
+                                                    <span id="book-name-update-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Description
                                                     </label>
@@ -125,16 +130,18 @@ if (
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Author
                                                     </label>
-                                                    <input type="tel" name="book_author" id="book_author" class="form-input-control mt-1" placeholder="Enter author">
+                                                    <input type="text" name="book_author" id="book_author" class="form-input-control mt-1" placeholder="Enter author">
+                                                    <span id="book-author-update-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Language
                                                     </label>
                                                     <input type="tel" name="book_lang" id="book_lang" class="form-input-control mt-1" placeholder="Enter lang">
+                                                    <span id="book-lang-update-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Book file
                                                     </label>
-                                                    <span class="text-xs text-gray-500 italic">Cannot be blank</span>
                                                     <input type="file" name="book_file" id="book_file" class="form-input-control mt-1" placeholder="Enter lang">
+                                                    <span id="book-file-update-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Book cover
                                                     </label>
@@ -178,10 +185,6 @@ if (
                                 </div>
 
                             </div>
-
-
-
-
 
                         </details>
                     </div>
@@ -259,5 +262,61 @@ if (
     </div>
 
 </body>
+
+<script>
+    function validateForm(form, bookNameError, bookAuthorError, bookLanguageError, bookFileError) {
+        form.addEventListener('submit', (e) => {
+            let error = false;
+
+
+            if (!form.elements["book_name"].value) {
+                bookNameError.textContent = "Book name is required";
+                error = true;
+            }
+
+
+            if (!form.elements["book_author"].value) {
+                bookAuthorError.textContent = "Book author is required";
+                error = true;
+            }
+
+
+            if (!form.elements["book_lang"].value) {
+                bookLanguageError.textContent = "Book language is required";
+                error = true;
+            }
+
+
+            if (!form.elements["book_file"].value) {
+                bookFileError.textContent = "Book file is required";
+                error = true;
+            }
+
+            if (error) {
+                e.preventDefault();
+                return;
+            }
+
+            form.submit();
+
+        })
+    }
+
+    const form = document.getElementById("form-add-book");
+    const bookNameError = document.getElementById("book-name-error");
+    const bookAuthorError = document.getElementById("book-author-error");
+    const bookLanguageError = document.getElementById("book-lang-error");
+    const bookFileError = document.getElementById("book-file-error");
+
+    validateForm(form, bookNameError, bookAuthorError, bookLanguageError, bookFileError)
+
+    const formUpdate = document.getElementById("form-update-book");
+    const bookNameUpdateError = document.getElementById("book-name-update-error");
+    const bookAuthorUpdateError = document.getElementById("book-author-update-error");
+    const bookLanguageUpdateError = document.getElementById("book-lang-update-error");
+    const bookFileUpdateError = document.getElementById("book-file-update-error");
+
+    validateForm(formUpdate, bookNameUpdateError, bookAuthorUpdateError, bookLanguageUpdateError, bookFileUpdateError)
+</script>
 
 </html>
