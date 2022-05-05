@@ -7,7 +7,21 @@ function display_books()
 
     $rows = [];
     //fetch from database
-    $sql = "SELECT b.*, u.username, u.email from books b inner join users u on b.uploader_id=u.id";
+    $sql = "SELECT b.id, b.book_name, b.book_desc, u.username, u.email, a.author_name as book_author from books b inner join users u on b.uploader_id=u.id inner join authors a on a.id=b.book_author";
+    $result = $con->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+    return $rows;
+}
+
+function display_authors()
+{
+    include("inc/connect.php");
+
+    $rows = [];
+    //fetch from database
+    $sql = "SELECT * from authors";
     $result = $con->query($sql);
     while ($row = $result->fetch_assoc()) {
         $rows[] = $row;
@@ -32,7 +46,7 @@ function get_books()
 
     $paging = calculate_paging($num);
     //fetch from database
-    $sql = "SELECT b.*, u.username, u.email from books b inner join users u on b.uploader_id=u.id LIMIT $paging[p_start], $record_ppage";
+    $sql = "SELECT b.id, b.book_name, b.book_desc, b.book_file, b.book_cover, a.author_name as book_author, u.username, u.email from books b inner join users u on b.uploader_id=u.id inner join authors a on a.id=b.book_author LIMIT $paging[p_start], $record_ppage";
     $result = $con->query($sql);
     return array("result" => $result, "paging" => $paging);
 }
@@ -42,7 +56,20 @@ function get_book($id)
 
     include($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/connect.php');
 
-    $query = "SELECT b.*, u.username, u.email FROM books b inner join users u on b.uploader_id=u.id where b.id='$id'";
+    $query = "SELECT b.id, b.book_name, b.book_desc, b.book_file, b.book_cover, a.author_name as book_author, u.username, u.email FROM books b inner join users u on b.uploader_id=u.id inner join authors a on a.id=b.book_author where b.id='$id'";
+
+    $result = $con->query($query);
+    $row = $result->fetch_assoc();
+
+    return $row;
+}
+
+function get_author($id)
+{
+
+    include($_SERVER['DOCUMENT_ROOT'] . '/Web/inc/connect.php');
+
+    $query = "SELECT * from authors where id='$id'";
 
     $result = $con->query($query);
     $row = $result->fetch_assoc();
@@ -93,7 +120,7 @@ function search_advance($keyword)
     $num = $row[0];
     $paging = calculate_paging($num);
 
-    $query = "select b.*, u.username, u.email from books b inner join users u on b.uploader_id=u.id where book_name like '%$pro_kw%' limit $paging[p_start], $record_ppage";
+    $query = "select b.id, b.book_name, b.book_desc, b.book_file, b.book_cover, a.author_name as book_author, u.username, u.email from books b inner join users u on b.uploader_id=u.id inner join authors a on a.id=b.book_author where book_name like '%$pro_kw%' limit $paging[p_start], $record_ppage";
 
     $result = $con->query($query) or die("Query failed: " . $conn->error);
 
@@ -110,7 +137,7 @@ function search_ajax($keyword)
         while ($book = $result->fetch_assoc()) {
             $books_html[] = <<<_RES
             <div class="w-56">
-            <a href="topic.php?topic_id=$book[id]">
+            <a href="book.php?book_id=$book[id]">
                 <img class="h-64 object-cover w-full" src="uploads/books/covers/$book[book_cover]" alt="">
                 <p class="text-base text-indigo-600 mt-1">$book[book_name]</p>
                 <h4 class="text-sm text-gray-500">$book[book_desc]</h4>
@@ -212,7 +239,7 @@ function search($keyword)
     while ($book = $result->fetch_assoc()) {
         echo <<<_RES
         <div class="w-56">
-        <a href="topic.php?topic_id=$book[id]">
+        <a href="book.php?book_id=$book[id]">
             <img class="h-64 object-cover w-full" src="uploads/books/covers/$book[book_cover]" alt="">
             <p class="text-base text-indigo-600 mt-1">$book[book_name]</p>
             <h4 class="text-sm text-gray-500">$book[book_desc]</h4>

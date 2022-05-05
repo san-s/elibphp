@@ -67,8 +67,10 @@ if (isset($_POST['add_book'])) {
         $_SESSION["success_message"] = "Add book successfully!";
         header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/manage_books.php');
     } else {
-        $_SESSION["error_message"] = "Update book failed!";
-        header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/manage_books.php');
+        print_r($con->error);
+        return;
+        // $_SESSION["error_message"] = "Add book failed!" . $con->error;
+        // header("Location: http://" . $_SERVER['HTTP_HOST'] . '/Web/manage_books.php');
     }
 
     $con->close();
