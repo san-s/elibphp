@@ -67,6 +67,7 @@ if (
             </div>
         </div>
     </div>
+    <?php include("inc/footer.php") ?>
 </body>
 
 </html>
