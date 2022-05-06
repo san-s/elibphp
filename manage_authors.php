@@ -68,7 +68,7 @@ if (
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         DOB
                                                     </label>
-                                                    <span id="book-desc-error" class="text-xs text-gray-500 italic text-red-600"></span>
+                                                    <span id="dob-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <input type="date" name="dob" id="dob" class="form-input-control mt-1" placeholder="Enter description">
                                                     <button type="submit" name="add_author" class="px-4 py-2 mt-4 rounded-full bg-indigo-600 font-bold text-sm text-white">
                                                         Add author
@@ -102,11 +102,11 @@ if (
                                                         Author name
                                                     </label>
                                                     <input type="text" name="author_name" id="author_name" class="form-input-control mt-1" placeholder="Enter author name">
-                                                    <span id="author-name-error" class="text-xs text-gray-500 italic text-red-600"></span>
+                                                    <span id="author-name-update-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         DOB
                                                     </label>
-                                                    <span id="book-desc-error" class="text-xs text-gray-500 italic text-red-600"></span>
+                                                    <span id="dob-update-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <input type="date" name="dob" id="dob" class="form-input-control mt-1" placeholder="Enter description">
                                                     <button type="submit" name="update_author" class="px-4 py-2 mt-4 rounded-full bg-indigo-600 font-bold text-sm text-white">
                                                         Update author
@@ -187,7 +187,7 @@ if (
                                                         <div class="text-sm font-medium text-gray-900"> <?php echo $author['dob'] ?> </div>
                                                     </div>
                                                 </td>
-                                                
+
                                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex justify-end">
                                                     <form action="inc/controller/author_controller.php" method="POST">
                                                         <input type="hidden" name="author_id" value="<?php echo $author['id'] ?>">
@@ -218,36 +218,26 @@ if (
         </div>
     </div>
 
+    <?php include("inc/footer.php") ?>
 </body>
 
 <script>
-    function validateForm(form, bookNameError, bookAuthorError, bookLanguageError, bookFileError) {
+    function validateForm(form, authorNameError, authorDOBerror) {
         form.addEventListener('submit', (e) => {
             let error = false;
 
 
-            if (!form.elements["book_name"].value) {
-                bookNameError.textContent = "Book name is required";
+            if (!form.elements["author_name"].value) {
+                authorNameError.textContent = "Author name is required";
                 error = true;
             }
 
 
-            if (!form.elements["book_author"].value) {
-                bookAuthorError.textContent = "Book author is required";
+            if (!form.elements["dob"].value) {
+                authorDOBerror.textContent = "Author DOB is required";
                 error = true;
             }
 
-
-            if (!form.elements["book_lang"].value) {
-                bookLanguageError.textContent = "Book language is required";
-                error = true;
-            }
-
-
-            if (!form.elements["book_file"].value) {
-                bookFileError.textContent = "Book file is required";
-                error = true;
-            }
 
             if (error) {
                 e.preventDefault();
@@ -259,21 +249,17 @@ if (
         })
     }
 
-    const form = document.getElementById("form-add-book");
-    const bookNameError = document.getElementById("book-name-error");
-    const bookAuthorError = document.getElementById("book-author-error");
-    const bookLanguageError = document.getElementById("book-lang-error");
-    const bookFileError = document.getElementById("book-file-error");
+    const form = document.getElementById("form-add-author");
+    const authorNameError = document.getElementById("author-name-error");
+    const authorDOBerror = document.getElementById("dob-error");
 
-    validateForm(form, bookNameError, bookAuthorError, bookLanguageError, bookFileError)
+    validateForm(form, authorNameError, authorDOBerror)
 
-    const formUpdate = document.getElementById("form-update-book");
-    const bookNameUpdateError = document.getElementById("book-name-update-error");
-    const bookAuthorUpdateError = document.getElementById("book-author-update-error");
-    const bookLanguageUpdateError = document.getElementById("book-lang-update-error");
-    const bookFileUpdateError = document.getElementById("book-file-update-error");
+    const formUpdate = document.getElementById("form-update-author");
+    const authorNameUpdateError = document.getElementById("author-name-update-error");
+    const dobUpdateError = document.getElementById("dob-update-error");
 
-    validateForm(formUpdate, bookNameUpdateError, bookAuthorUpdateError, bookLanguageUpdateError, bookFileUpdateError)
+    validateForm(formUpdate, authorNameUpdateError, dobUpdateError)
 </script>
 
 </html>

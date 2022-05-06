@@ -85,6 +85,8 @@
             </div>
         </div>
     </div>
+
+    <?php include("inc/footer.php") ?>
 </body>
 
 <script>
