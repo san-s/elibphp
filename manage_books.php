@@ -64,7 +64,7 @@ if (
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4" for="inline-full-name">
                                                         Book name
                                                     </label>
-                                                    <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter username">
+                                                    <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter book name">
                                                     <span id="book-name-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Description
@@ -117,7 +117,7 @@ if (
                                                 <form id="form-update-book" method="post" enctype="multipart/form-data" action="inc/controller/book_controller.php">
                                                     <div class="form-group">
 
-                                                        <label class="mt-2 text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 w-1/6 flex-shrink-0" for="exampleFormControlSelect1">
+                                                        <label class="mt-2 text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 w-1/6 flex-shrink-0">
                                                             Select book
                                                         </label>
                                                         <select class="form-input-control mt-1" name="book_id">
@@ -133,7 +133,7 @@ if (
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 mt-1 md:mb-0 pr-4" for="inline-full-name">
                                                         Book name
                                                     </label>
-                                                    <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter username">
+                                                    <input type="text" name="book_name" id="book_name" class="form-input-control mt-1" placeholder="Enter book name">
                                                     <span id="book-name-update-error" class="text-xs text-gray-500 italic text-red-600"></span>
                                                     <label class="block text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 mt-3" for="inline-full-name">
                                                         Description

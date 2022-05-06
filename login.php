@@ -1,4 +1,3 @@
-
 <?php include('inc/head.php') ?>
 
 
@@ -17,6 +16,10 @@
 				<div class="form-control mt-2">
 					<i class="fa fa-lock"></i>
 					<input type="password" name="password" placeholder="Please enter your password">
+				</div>
+				<div class="">
+					<input type="checkbox" name="remember_me">
+					<span class="ml-1 text-xss text-gray-500">Remember me</span>
 				</div>
 				<div class="flex space-between items-center mt-2">
 					<button type="submit" name="login" class="btn-login">Login</button>
