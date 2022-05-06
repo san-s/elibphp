@@ -20,7 +20,7 @@
             </p>
         </div>
         <div id="slog">
-            <p>No.1 E Learning Website</p>
+            <p>No.1 E Library Website</p>
         </div>
     </div>
     <div id="down-header">
