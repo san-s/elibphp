@@ -88,7 +88,7 @@ if (
                                                         <label class="mt-2 text-gray-500 font-bold md:text-left mb-1 md:mb-0 pr-4 w-1/6 flex-shrink-0" for="exampleFormControlSelect1">
                                                             Select author
                                                         </label>
-                                                        <select class="form-input-control mt-1" name="book_id">
+                                                        <select class="form-input-control mt-1" name="author_id">
 
                                                             <?php foreach ($authors as $author) {
                                                             ?>

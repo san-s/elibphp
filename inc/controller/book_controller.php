@@ -33,7 +33,7 @@ if (isset($_POST['add_book'])) {
         if (in_array($type, $allowed)) {
             //Move File
             $file_name = unique_file_name($file_ext);
-            if (move_uploaded_file($_FILES['book_file']['tmp_name'], '/opt/lampp/htdocs/Web/uploads/books/' . $file_name)) {
+            if (move_uploaded_file($_FILES['book_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/' . $file_name)) {
                 $bookfileVar = $file_name;
             }
         } else {
@@ -50,7 +50,7 @@ if (isset($_POST['add_book'])) {
         if (in_array($type, $allowed)) {
             //Move File
             $file_name = unique_file_name($file_ext);
-            if (move_uploaded_file($_FILES['book_cover']['tmp_name'], '/opt/lampp/htdocs/Web/uploads/books/covers/' . $file_name)) {
+            if (move_uploaded_file($_FILES['book_cover']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/covers/' . $file_name)) {
                 $bookCoverVar = $file_name;
             }
         } else {
@@ -114,13 +114,13 @@ if (isset($_POST['update_book'])) {
         $file_ext = strtolower(end($file_ext));
         if (in_array($type, $allowed)) {
             //Remove old file
-            $old_file = '/opt/lampp/htdocs/Web/uploads/books/' . $book["book_file"];
+            $old_file =  $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/' . $book["book_file"];
             if (file_exists($old_file)) {
                 unlink($old_file);
             }
             //Move File
             $file_name = unique_file_name($file_ext);
-            if (move_uploaded_file($_FILES['book_file']['tmp_name'], '/opt/lampp/htdocs/Web/uploads/books/' . $file_name)) {
+            if (move_uploaded_file($_FILES['book_file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/' . $file_name)) {
                 $bookfileVar = $file_name;
             }
         } else {
@@ -136,13 +136,13 @@ if (isset($_POST['update_book'])) {
         $file_ext = strtolower(end($file_ext));
         if (in_array($type, $allowed)) {
             //Remove old file
-            $old_file = '/opt/lampp/htdocs/Web/uploads/books/covers/' . $book["book_cover"];
+            $old_file = $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/covers/' . $book["book_cover"];
             if (file_exists($old_file)) {
                 unlink($old_file);
             }
             //Move File
             $file_name = unique_file_name($file_ext);
-            if (move_uploaded_file($_FILES['book_cover']['tmp_name'], '/opt/lampp/htdocs/Web/uploads/books/covers/' . $file_name)) {
+            if (move_uploaded_file($_FILES['book_cover']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/covers/' . $file_name)) {
                 $bookCoverVar = $file_name;
             }
         } else {
@@ -171,12 +171,12 @@ if (isset($_POST['del_book'])) {
 
     $book = get_book($book_id);
     //Remove old file
-    $cover = '/opt/lampp/htdocs/Web/uploads/books/covers/' . $book["book_cover"];
+    $cover = $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/covers/' . $book["book_cover"];
     if (file_exists($cover) && is_file($cover)) {
         unlink($cover);
     }
     //Remove old file
-    $old_file = '/opt/lampp/htdocs/Web/uploads/books/' . $book["book_file"];
+    $old_file = $_SERVER['DOCUMENT_ROOT'] . '/Web/uploads/books/' . $book["book_file"];
     if (file_exists($old_file) && is_file($old_file)) {
         unlink($old_file);
     }
